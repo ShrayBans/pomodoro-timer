@@ -11,13 +11,11 @@ class Timer extends Component {
             lastMode: "active",
             mode: "setting", //setting, active,  paused, break-ready, break
             seconds: 0,
-            timerInput: "",
-            breakInput: "",
         };
     }
 
     setTimer = () => {
-        const { timerInput } = this.state;
+        const { timerInput } = this.props;
         if (parseInt(timerInput, 10)) {
             this.setState({ seconds: timerInput * 60 });
         }
@@ -40,20 +38,11 @@ class Timer extends Component {
         if (seconds > 0) {
             this.timer = setInterval(this.countDown, 1000);
             if (mode === "setting" || mode === "break-ready") {
-                console.log("lastMode", lastMode);
                 this.setState({ mode: lastMode, seconds: seconds });
             } else {
                 this.setState({ mode: lastMode });
             }
         }
-    }
-
-    handleTimerInput = (word) => {
-        this.setState({ timerInput: word })
-    }
-
-    handleBreakInput = (word) => {
-        this.setState({ breakInput: word })
     }
 
     countDown = () => {
@@ -64,14 +53,14 @@ class Timer extends Component {
             this.setState({ mode: "break-ready" });
         }
     }
-    //
-    // componentWillUnmount() {
-    //     clearInterval(this.timer);
-    // }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
 
     render() {
         const { seconds, timerInput, breakInput, mode } = this.state;
-        console.log("moderender", mode);
+        const { handleTimerInput, handleBreakInput } = this.props;
         return (
             <div className="Timer">
                 <div className="Timer-header">
@@ -81,8 +70,8 @@ class Timer extends Component {
                     <TimerButtons
                         breakInput={breakInput}
                         timerInput={timerInput}
-                        handleTimerInput={this.handleTimerInput}
-                        handleBreakInput={this.handleBreakInput}
+                        handleTimerInput={handleTimerInput}
+                        handleBreakInput={handleBreakInput}
                         pauseTimer={this.pauseTimer}
                         startTimer={this.startTimer}
                         setTimer={this.setTimer}

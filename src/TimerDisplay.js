@@ -1,7 +1,7 @@
 import React from "react";
 
 const TimerDisplay = (props) => {
-    const { seconds } = props;
+    const { seconds, type } = props;
 
     const timeDisplay = (secs) => {
         var sec_num = parseInt(secs, 10);
@@ -15,9 +15,13 @@ const TimerDisplay = (props) => {
         return (hours || "00" ) + ":" + (minutes || "00") + ":" + (seconds || "00");
     }
 
+    const display = type === "simple"
+        ? `${seconds / 60} min`
+        : timeDisplay(seconds);
+
     return (
         <div>
-            { timeDisplay(seconds) }
+            { display }
         </div>
     );
 };
