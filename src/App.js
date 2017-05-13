@@ -4,6 +4,10 @@ import Timer from "./Timer";
 import TimerDisplay from "./TimerDisplay";
 import ToDoListDisplay from "./ToDoListDisplay";
 import ToDoList from "./ToDoList";
+import _ from "lodash";
+import Chance from "chance";
+const chance = new Chance();
+
 
 
 class App extends Component {
@@ -17,8 +21,6 @@ class App extends Component {
             selectedToDoUuid: "",
         };
     }
-
-    //import lodash, import chance
 
     handleTimerInput = (evt) => {
         this.setState({ timerInput: evt.target.value })
@@ -34,10 +36,8 @@ class App extends Component {
 
     handleToDoEnter = (evt) => {
         const { todos, toDoInput } = this.state;
-        const newId = todos.length - 1 > -1
-                ? todos[todos.length - 1].uuid + 1
-                : 1;
-        const newTodo = { name: toDoInput, uuid: newId }
+        const newId = chance.guid();
+        const newTodo = { name: toDoInput, uuid: newId };
         if (evt.key === "Enter") {
             this.setState({ toDoInput: "", todos: [...todos, newTodo] });
         }
@@ -49,18 +49,13 @@ class App extends Component {
 
     deleteTodo = (uuid) => {
         const { todos } = this.state;
-        const newTodos = todos.filter(todo => todo.uuid !== uuid)
+        const newTodos = _.filter(todos, todo => todo.uuid !== uuid)
         this.setState({ todos: newTodos });
     }
 
     render = () => {
         const { todos, toDoInput, breakInput, timerInput, selectedToDoUuid } = this.state;
-        let selectedTodoName;
-        todos.forEach((todo) => {
-            if (todo.uuid === selectedToDoUuid) {
-                selectedTodoName = todo.name;
-            }
-        });
+        const selectedTodoName = _.find(todos, { uuid: selectedToDoUuid });
         return (
             <div className="App">
                 <div className="App-header">
